@@ -6,7 +6,11 @@ CONFIG  += c++17
 
 SOURCES += \
     .\src\main.cpp \
-    .\src\mainwindow.cpp
+    .\src\mainwindow.cpp \
+    src/cell.cpp \
+    src/field.cpp
 
 HEADERS += \
-    .\src\mainwindow.h
+    .\src\mainwindow.h \
+    src/cell.h \
+    src/field.h
