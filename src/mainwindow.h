@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QComboBox>
 
+#include "field.h"
+
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -16,6 +18,9 @@ public:
 private:
     QPushButton *m_pStartBtn;
     QComboBox *m_pDifficultyCmb;
+
+    field* game;
+
 };
 
 #endif // MAINWINDOW_H

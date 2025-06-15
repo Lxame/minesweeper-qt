@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     pLayout->addWidget(m_pDifficultyCmb);
 
     setLayout(pLayout);
+
+    game = new field(20, 10, 30);
+
+    connect(m_pStartBtn, SIGNAL(clicked()), game, SLOT(show()));
 }
 
 MainWindow::~MainWindow() {}
