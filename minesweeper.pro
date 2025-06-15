@@ -14,3 +14,6 @@ HEADERS += \
     ./src/mainwindow.h \
     src/cell.h \
     src/field.h
+
+RESOURCES += \
+    res/res.qrc

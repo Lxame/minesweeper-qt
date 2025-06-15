@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>default.png</file>
+        <file>eight.png</file>
+        <file>empty.png</file>
+        <file>five.png</file>
+        <file>flag.png</file>
+        <file>four.png</file>
+        <file>mine.png</file>
+        <file>mine_boom.png</file>
+        <file>one.png</file>
+        <file>red_flag.png</file>
+        <file>seven.png</file>
+        <file>six.png</file>
+        <file>three.png</file>
+        <file>two.png</file>
+    </qresource>
+</RCC>

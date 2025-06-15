@@ -1,17 +1,17 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include <QAbstractButton>
+#include <QPushButton>>
 
-class cell : public QAbstractButton
+class cell : public QPushButton
 {
 public:
-    cell(ushort x, ushort y, ushort minesCount, bool isMine);
+    cell(ushort x, ushort y, ushort minesAround, bool isMine);
 
 private:
     enum Status
     {
-        empty = 0,
+        deflt = 0,
         open = 1,
         flag = 2,
     };

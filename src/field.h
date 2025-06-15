@@ -23,6 +23,8 @@ private:
 private:
     bool formField();
     void generateMines();
+    void initCells();
+    ushort countMinesAroundCell(ushort x, ushort y);
 
 signals:
 };
