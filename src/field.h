@@ -2,6 +2,8 @@
 #define FIELD_H
 
 #include <QWidget>
+#include <QIcon>
+#include <QMap>
 //#include <list>
 
 #include "cell.h"
@@ -19,14 +21,17 @@ private:
     ushort m_minesCount;
     std::vector<std::vector<int>> fld;
     QVector<cell> *cells;
+    QMap<int, QIcon> iqons;
 
 private:
     bool formField();
     void generateMines();
     void initCells();
+    void initRes();
     ushort countMinesAroundCell(ushort x, ushort y);
 
-signals:
+private slots:
+    void processClick();
 };
 
 #endif // FIELD_H
