@@ -2,6 +2,7 @@
 #define CELL_H
 
 #include <QPushButton>
+#include <QMouseEvent>
 
 class cell : public QPushButton
 {
@@ -31,6 +32,22 @@ private:
     ushort m_x, m_y;
     ushort m_minesAround;
     bool m_isMine;
+
+signals:
+    void rightClicked();
+
+protected:
+    void mousePressEvent(QMouseEvent* event) override
+    {
+        if (event->button() == Qt::RightButton)
+        {
+            emit rightClicked();
+        }
+        else
+        {
+            QPushButton::mousePressEvent(event); // вызов стандартного поведения
+        }
+    }
 };
 
 #endif // CELL_H

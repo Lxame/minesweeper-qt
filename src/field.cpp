@@ -20,38 +20,37 @@ field::field(ushort width, ushort height, ushort minesCount)
 
 void field::initRes()
 {
-    QIcon def(":images/default.png");
-    QIcon one(":images/one.png");
-    QIcon two(":images/two.png");
-    QIcon three(":images/three.png");
-    QIcon four(":images/four.png");
-    QIcon five(":images/five.png");
-    QIcon six(":images/six.png");
-    QIcon seven(":images/seven.png");
-    QIcon eight(":images/eight.png");
-    QIcon nine(":images/nine.png");
-    QIcon zero(":images/zero.png");
-    QIcon flag(":images/flag.png");
-    QIcon red_flag(":images/red_flag.png");
-    QIcon mine(":images/mine.png");
-    QIcon mine_boom(":images/mine_boom.png");
+    int scale = 32;
+    QIcon def       (QPixmap(":images/default.png")     .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon one       (QPixmap(":images/one.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon two       (QPixmap(":images/two.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon three     (QPixmap(":images/three.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon four      (QPixmap(":images/four.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon five      (QPixmap(":images/five.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon six       (QPixmap(":images/six.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon seven     (QPixmap(":images/seven.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon eight     (QPixmap(":images/eight.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon empty     (QPixmap(":images/empty.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon flag      (QPixmap(":images/flag.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon red_flag  (QPixmap(":images/red_flag.png")    .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon mine      (QPixmap(":images/mine.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon mine_boom (QPixmap(":images/mine_boom.png")   .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
     std::cout << "insert..." << std::endl;
-    iqons.insert(0, def);
-    iqons.insert(1, one);
-    iqons.insert(2, two);
-    iqons.insert(3, three);
-    iqons.insert(4, four);
-    iqons.insert(5, five);
-    iqons.insert(6, six);
-    iqons.insert(7, seven);
-    iqons.insert(8, eight);
-    iqons.insert(9, nine);
-    iqons.insert(10, zero);
-    iqons.insert(11, flag);
-    iqons.insert(12, red_flag);
-    iqons.insert(-1, mine);
-    iqons.insert(-2, mine_boom);
+    iqons.insert(ICON::def, def);
+    iqons.insert(ICON::one, one);
+    iqons.insert(ICON::two, two);
+    iqons.insert(ICON::three, three);
+    iqons.insert(ICON::four, four);
+    iqons.insert(ICON::five, five);
+    iqons.insert(ICON::six, six);
+    iqons.insert(ICON::seven, seven);
+    iqons.insert(ICON::eight, eight);
+    iqons.insert(ICON::empty, empty);
+    iqons.insert(ICON::flag, flag);
+    iqons.insert(ICON::red_flag, red_flag);
+    iqons.insert(ICON::mine, mine);
+    iqons.insert(ICON::mine_boom, mine_boom);
     std::cout << "insert completed" << std::endl;
 }
 
@@ -101,12 +100,13 @@ void field::initCells()
         {
             bool isMine = fld.at(y).at(x) == -1;
             cell *newCell = new cell(x, y, isMine ? -1 : countMinesAroundCell(x, y), isMine);
-            newCell->setIcon(iqons.value(0));
-            int size = 16;
+            newCell->setIcon(iqons.value(ICON::def));
+            int size = 32;
             newCell->setFixedSize(size, size);
-            newCell->setIconSize(this->size());
+            newCell->setIconSize(QSize(size, size));
 
-            connect(newCell, SIGNAL(clicked()), this, SLOT(processClick()));
+            connect(newCell, SIGNAL(clicked()),      this, SLOT(leftClick()));
+            connect(newCell, SIGNAL(rightClicked()), this, SLOT(rightClick()));
 
             if (isMine)
             {
@@ -138,11 +138,20 @@ ushort field::countMinesAroundCell(ushort x, ushort y)
     return mines_count;
 }
 
-void field::processClick()
+void field::leftClick()
 {
-    sender();
     cell *c = qobject_cast<cell*>(sender());
-    std::cout << "button clicked x: " << c->getX() << " y: " << c->getY() << std::endl;
+    std::cout << "LEFT button clicked x: " << c->getX() << " y: " << c->getY() << std::endl;
+
+    c->setIcon(iqons.value(ICON::one));
+}
+
+void field::rightClick()
+{
+    cell *c = qobject_cast<cell*>(sender());
+    std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << std::endl;
+
+    c->setIcon(iqons.value(ICON::flag));
 }
 
 
