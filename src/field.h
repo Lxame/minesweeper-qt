@@ -18,7 +18,8 @@ public:
 private:
     enum ICON
     {
-        def = 0,
+        def = -1,
+        empty = 0,
         one = 1,
         two = 2,
         three = 3,
@@ -27,11 +28,10 @@ private:
         six = 6,
         seven = 7,
         eight = 8,
-        empty = 9,
-        flag = 10,
-        red_flag = 11,
-        mine = -1,
-        mine_boom = -2
+        flag = 16,
+        red_flag = 32,
+        mine = 64,
+        mine_boom = 128
     };
     ushort m_width;
     ushort m_height;
@@ -46,6 +46,8 @@ private:
     void initCells();
     void initRes();
     ushort countMinesAroundCell(ushort x, ushort y);
+    void lose();
+    void win();
 
 private slots:
     void leftClick();

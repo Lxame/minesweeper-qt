@@ -21,13 +21,34 @@ public:
         return m_y;
     }
 
-private:
+    ushort mines()
+    {
+        return m_minesAround;
+    }
+
+    bool isMine()
+    {
+        return m_isMine;
+    }
+
     enum status
     {
         deflt = 0,
         open = 1,
         flag = 2,
     };
+
+    status getStatus()
+    {
+        return m_current;
+    }
+
+    void setStatus(status stat)
+    {
+        m_current = stat;
+    }
+
+private:
     status m_current;
     ushort m_x, m_y;
     ushort m_minesAround;

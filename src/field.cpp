@@ -141,17 +141,57 @@ ushort field::countMinesAroundCell(ushort x, ushort y)
 void field::leftClick()
 {
     cell *c = qobject_cast<cell*>(sender());
-    std::cout << "LEFT button clicked x: " << c->getX() << " y: " << c->getY() << std::endl;
+    std::cout << "LEFT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
+    std::cout << "status: " << c->getStatus() << std::endl;
 
-    c->setIcon(iqons.value(ICON::one));
+    int mines = c->mines();
+    switch (c->getStatus()) {
+    case cell::status::deflt:
+        if (c->isMine())
+        {
+            // lose
+            c->setIcon(iqons.value(ICON::mine_boom));
+        }
+        else
+        {
+            c->setIcon(iqons.value(static_cast<ICON>(mines)));
+            c->setStatus(cell::status::open);
+        }
+        break;
+    case cell::status::flag:
+        break;
+    case cell::status::open:
+        if (c->mines() != 0)
+        {
+            // pick nearest
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void field::rightClick()
 {
     cell *c = qobject_cast<cell*>(sender());
-    std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << std::endl;
+    std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
+    std::cout << "status: " << c->getStatus() << std::endl;
 
-    c->setIcon(iqons.value(ICON::flag));
+    switch (c->getStatus()) {
+    case cell::status::deflt:
+        c->setIcon(iqons.value(ICON::flag));
+        c->setStatus(cell::status::flag);
+        break;
+    case cell::status::flag:
+        c->setIcon(iqons.value(ICON::def));
+        c->setStatus(cell::status::deflt);
+        break;
+    case cell::status::open:
+        c->setStatus(cell::status::open);
+        break;
+    default:
+        break;
+    }
 }
 
 
