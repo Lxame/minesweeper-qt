@@ -36,8 +36,9 @@ private:
     ushort m_width;
     ushort m_height;
     ushort m_minesCount;
+    quint16 a; // TODO change all ushort to quint16 
     std::vector<std::vector<int>> fld;
-    QVector<cell> *cells;
+    QVector<QVector<cell*>> cells;
     QMap<ICON, QIcon> iqons;
 
 private:
@@ -48,6 +49,7 @@ private:
     ushort countMinesAroundCell(ushort x, ushort y);
     void lose();
     void win();
+    void openNearest(ushort x, ushort y);    
 
 private slots:
     void leftClick();

@@ -96,6 +96,7 @@ void field::initCells()
 
     for (ushort y = 0; y < m_height; ++y)
     {
+        QVector<cell*> row;
         for (ushort x = 0; x < m_width; ++x)
         {
             bool isMine = fld.at(y).at(x) == -1;
@@ -113,10 +114,13 @@ void field::initCells()
                 std::cout << -1 << " ";
             }
 
+            row.push_back(newCell);
             grid->addWidget(newCell, y, x);
         }
+        cells.push_back(row);
         std::cout << std::endl;
     }
+
     grid->setSpacing(0);
     this->setLayout(grid);
 }
@@ -141,27 +145,37 @@ ushort field::countMinesAroundCell(ushort x, ushort y)
 void field::leftClick()
 {
     cell *c = qobject_cast<cell*>(sender());
+
     std::cout << "LEFT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
     std::cout << "status: " << c->getStatus() << std::endl;
 
-    int mines = c->mines();
-    switch (c->getStatus()) {
+    ushort mines = c->mines();
+    ushort x = c->getX();
+    ushort y = c->getY(); 
+
+    switch (c->getStatus()) 
+    {
     case cell::status::deflt:
         if (c->isMine())
         {
             // lose
             c->setIcon(iqons.value(ICON::mine_boom));
+            lose();
         }
         else
         {
             c->setIcon(iqons.value(static_cast<ICON>(mines)));
             c->setStatus(cell::status::open);
+            if (mines == 0)
+            {
+                openNearest(x, y);
+            }
         }
         break;
     case cell::status::flag:
         break;
     case cell::status::open:
-        if (c->mines() != 0)
+        if (mines != 0)
         {
             // pick nearest
         }
@@ -174,10 +188,12 @@ void field::leftClick()
 void field::rightClick()
 {
     cell *c = qobject_cast<cell*>(sender());
+
     std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
     std::cout << "status: " << c->getStatus() << std::endl;
 
-    switch (c->getStatus()) {
+    switch (c->getStatus()) 
+    {
     case cell::status::deflt:
         c->setIcon(iqons.value(ICON::flag));
         c->setStatus(cell::status::flag);
@@ -194,4 +210,37 @@ void field::rightClick()
     }
 }
 
+void field::openNearest(ushort x, ushort y)
+{
+    for (int col = x - 1; col <= x + 1; ++col)
+    {
+        for (int row = y - 1; row <= y + 1; ++row)
+        {
+            if (row >= 0 && row < m_height && col >= 0 && col < m_width && fld.at(row).at(col) == 0)
+            {
+                cell *c = cells.at(row).at(col);
+                if (c->getStatus() == cell::status::deflt)
+                {
+                    c->setStatus(cell::status::open);
 
+                    const ushort mines = c->mines();
+                    c->setIcon(iqons.value(static_cast<ICON>(mines)));
+                    if (mines == 0)
+                    {
+                        openNearest(c->getX(), c->getY());
+                    }
+                }
+            }
+        }
+    }
+}
+
+void field::lose()
+{
+    std::cout << "You lose" << std::endl;
+}
+
+void field::win()
+{
+    std::cout << "You win!!!" << std::endl;
+}
