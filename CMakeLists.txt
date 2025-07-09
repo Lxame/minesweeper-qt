@@ -9,9 +9,10 @@ set(CMAKE_AUTOMOC ON)           # Автоматическая генераци�
 set(CMAKE_AUTORCC ON)           # Авто-подключение ресурсов (если есть)
 set(CMAKE_AUTOUIC ON)           # Авто-подключение .ui (если есть)
 
-find_package(Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
-# qt_standard_project_setup()
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Core)
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 
 add_executable(minesweeper-qt
     src/main.cpp
@@ -21,6 +22,7 @@ add_executable(minesweeper-qt
     src/field.h
     src/mainwindow.cpp
     src/mainwindow.h
+    res/res.qrc
 )
 
 target_link_libraries(minesweeper-qt PRIVATE Qt5::Core)
