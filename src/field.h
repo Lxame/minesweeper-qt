@@ -50,9 +50,11 @@ private:
     void lose();
     void win();
     void openNearest(ushort x, ushort y);    
+    void lightNearest(ushort x, ushort y, bool show);
 
 private slots:
-    void leftClick();
+    void leftPressed();
+    void leftReleased();
     void rightClick();
 };
 

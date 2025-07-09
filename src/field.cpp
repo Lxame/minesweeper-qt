@@ -30,7 +30,7 @@ void field::initRes()
     QIcon six       (QPixmap(":images/six.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QIcon seven     (QPixmap(":images/seven.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QIcon eight     (QPixmap(":images/eight.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon empty     (QPixmap(":images/empty.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QIcon empty     (QPixmap(":images/empty.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QIcon flag      (QPixmap(":images/flag.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QIcon red_flag  (QPixmap(":images/red_flag.png")    .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QIcon mine      (QPixmap(":images/mine.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -106,7 +106,8 @@ void field::initCells()
             newCell->setFixedSize(size, size);
             newCell->setIconSize(QSize(size, size));
 
-            connect(newCell, SIGNAL(clicked()),      this, SLOT(leftClick()));
+            connect(newCell, SIGNAL(pressed()),      this, SLOT(leftPressed()));
+            connect(newCell, SIGNAL(released()),     this, SLOT(leftReleased()));
             connect(newCell, SIGNAL(rightClicked()), this, SLOT(rightClick()));
 
             if (isMine)
@@ -142,7 +143,30 @@ ushort field::countMinesAroundCell(ushort x, ushort y)
     return mines_count;
 }
 
-void field::leftClick()
+void field::leftPressed()
+{
+    cell *c = qobject_cast<cell*>(sender());
+
+    ushort mines = c->mines();
+    ushort x = c->getX();
+    ushort y = c->getY(); 
+
+    switch (c->getStatus()) 
+    {
+    case cell::status::deflt:
+        c->setIcon(iqons.value(ICON::empty));
+        break;
+    case cell::status::flag:
+        break;
+    case cell::status::open:
+        lightNearest(x, y, true);
+        break;
+    default:
+        break;
+    }
+}
+
+void field::leftReleased()
 {
     cell *c = qobject_cast<cell*>(sender());
 
@@ -175,6 +199,7 @@ void field::leftClick()
     case cell::status::flag:
         break;
     case cell::status::open:
+        lightNearest(x, y, false);
         if (mines != 0)
         {
             // pick nearest
@@ -203,7 +228,6 @@ void field::rightClick()
         c->setStatus(cell::status::deflt);
         break;
     case cell::status::open:
-        c->setStatus(cell::status::open);
         break;
     default:
         break;
@@ -228,6 +252,31 @@ void field::openNearest(ushort x, ushort y)
                     if (mines == 0)
                     {
                         openNearest(c->getX(), c->getY());
+                    }
+                }
+            }
+        }
+    }
+}
+
+void field::lightNearest(ushort x, ushort y, bool show)
+{
+    for (int col = x - 1; col <= x + 1; ++col)
+    {
+        for (int row = y - 1; row <= y + 1; ++row)
+        {
+            if (row >= 0 && row < m_height && col >= 0 && col < m_width)
+            {
+                cell *c = cells.at(row).at(col);
+                if (c->getStatus() == cell::status::deflt)
+                {
+                    if (show)
+                    {
+                        c->setIcon(iqons.value(ICON::empty));
+                    }
+                    else
+                    {
+                        c->setIcon(iqons.value(ICON::def));
                     }
                 }
             }
