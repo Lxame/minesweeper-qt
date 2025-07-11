@@ -93,6 +93,7 @@ void field::generateMines()
 void field::initCells()
 {
     QGridLayout *grid = new QGridLayout();
+    int SIZE = 32;
 
     for (ushort y = 0; y < m_height; ++y)
     {
@@ -102,9 +103,8 @@ void field::initCells()
             bool isMine = fld.at(y).at(x) == -1;
             cell *newCell = new cell(x, y, isMine ? -1 : countMinesAroundCell(x, y), isMine);
             newCell->setIcon(iqons.value(ICON::def));
-            int size = 32;
-            newCell->setFixedSize(size, size);
-            newCell->setIconSize(QSize(size, size));
+            newCell->setFixedSize(SIZE, SIZE);
+            newCell->setIconSize(QSize(SIZE, SIZE));
 
             connect(newCell, SIGNAL(pressed()),      this, SLOT(leftPressed()));
             connect(newCell, SIGNAL(released()),     this, SLOT(leftReleased()));
@@ -123,6 +123,10 @@ void field::initCells()
     }
 
     grid->setSpacing(0);
+    grid->setContentsMargins(0, 0, 0, 0);
+	grid->setSizeConstraint(QLayout::SetFixedSize);
+    grid->setMargin(SIZE / 2);
+
     this->setLayout(grid);
 }
 
