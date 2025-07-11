@@ -48,10 +48,28 @@ public:
         m_current = stat;
     }
 
+    void increaseFlagsCount()
+    {
+        if (m_flagsAround < 8)
+            ++m_flagsAround;
+    }
+
+    void decreaseFlagsCount()
+    {
+        if (m_flagsAround > 0)
+            --m_flagsAround;
+    }
+
+    ushort getFlagsCount()
+    {
+        return m_flagsAround;
+    }
+
 private:
     status m_current;
     ushort m_x, m_y;
     ushort m_minesAround;
+    ushort m_flagsAround;
     bool m_isMine;
 
 signals:

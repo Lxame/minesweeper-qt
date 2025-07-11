@@ -51,6 +51,7 @@ private:
     void win();
     void openNearest(ushort x, ushort y);    
     void lightNearest(ushort x, ushort y, bool show);
+    void updateNearestFlagCount(ushort x, ushort y, bool increase);
 
 private slots:
     void leftPressed();

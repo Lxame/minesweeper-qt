@@ -175,7 +175,9 @@ void field::leftReleased()
     cell *c = qobject_cast<cell*>(sender());
 
     std::cout << "LEFT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
-    std::cout << "status: " << c->getStatus() << std::endl;
+    std::cout << "status: " << c->getStatus() << "\t";
+    std::cout << "flags: " << c->getFlagsCount() << "\t";
+    std::cout << "\n";
 
     ushort mines = c->mines();
     ushort x = c->getX();
@@ -204,9 +206,10 @@ void field::leftReleased()
         break;
     case cell::status::open:
         lightNearest(x, y, false);
-        if (mines != 0)
+        if (c->getFlagsCount() == mines)
         {
             // pick nearest
+            openNearest(x, y);
         }
         break;
     default:
@@ -217,6 +220,8 @@ void field::leftReleased()
 void field::rightClick()
 {
     cell *c = qobject_cast<cell*>(sender());
+    ushort x = c->getX();
+    ushort y = c->getY();
 
     std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
     std::cout << "status: " << c->getStatus() << std::endl;
@@ -226,10 +231,12 @@ void field::rightClick()
     case cell::status::deflt:
         c->setIcon(iqons.value(ICON::flag));
         c->setStatus(cell::status::flag);
+        updateNearestFlagCount(x, y, true);
         break;
     case cell::status::flag:
         c->setIcon(iqons.value(ICON::def));
         c->setStatus(cell::status::deflt);
+        updateNearestFlagCount(x, y, false);
         break;
     case cell::status::open:
         break;
@@ -244,18 +251,38 @@ void field::openNearest(ushort x, ushort y)
     {
         for (int row = y - 1; row <= y + 1; ++row)
         {
-            if (row >= 0 && row < m_height && col >= 0 && col < m_width && fld.at(row).at(col) == 0)
+            if (col == x && row == y)
+            {
+                continue;
+            }
+            else if (row >= 0 && row < m_height && col >= 0 && col < m_width)
             {
                 cell *c = cells.at(row).at(col);
                 if (c->getStatus() == cell::status::deflt)
                 {
-                    c->setStatus(cell::status::open);
-
-                    const ushort mines = c->mines();
-                    c->setIcon(iqons.value(static_cast<ICON>(mines)));
-                    if (mines == 0)
+                    if (c->isMine())
                     {
-                        openNearest(c->getX(), c->getY());
+                        c->setIcon(iqons.value(ICON::mine_boom));
+                        lose();
+                    }
+                    else
+                    {
+                        const ushort mines = c->mines();
+                        c->setIcon(iqons.value(static_cast<ICON>(mines)));
+                        c->setStatus(cell::status::open);
+
+                        if (mines == 0)
+                        {
+                            openNearest(c->getX(), c->getY());
+                        }
+                    }
+                }
+                else if (c->getStatus() == cell::status::flag)
+                {
+                    if (!c->isMine())
+                    {
+                        c->setIcon(iqons.value(ICON::red_flag));
+                        lose();
                     }
                 }
             }
@@ -269,7 +296,11 @@ void field::lightNearest(ushort x, ushort y, bool show)
     {
         for (int row = y - 1; row <= y + 1; ++row)
         {
-            if (row >= 0 && row < m_height && col >= 0 && col < m_width)
+            if (col == x && row == y)
+            {
+                continue;
+            }
+            else if (row >= 0 && row < m_height && col >= 0 && col < m_width)
             {
                 cell *c = cells.at(row).at(col);
                 if (c->getStatus() == cell::status::deflt)
@@ -282,6 +313,34 @@ void field::lightNearest(ushort x, ushort y, bool show)
                     {
                         c->setIcon(iqons.value(ICON::def));
                     }
+                }
+            }
+        }
+    }
+}
+
+void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
+{
+    for (int col = x - 1; col <= x + 1; ++col)
+    {
+        for (int row = y - 1; row <= y + 1; ++row)
+        {
+            if (col == x && row == y)
+            {
+                continue;
+            }
+            else if (row >= 0 && row < m_height && col >= 0 && col < m_width)
+            {
+                cell *c = cells.at(row).at(col);
+                if (increase)
+                {
+                    c->increaseFlagsCount();
+                    std::cout << "flags++" << std::endl;
+                }
+                else
+                {
+                    c->decreaseFlagsCount();
+                    std::cout << "flags--" << std::endl;
                 }
             }
         }
