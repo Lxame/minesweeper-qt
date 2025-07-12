@@ -26,8 +26,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     setLayout(pLayout);
 
-    game = new field(20, 10, 30);
-
     connect(m_pStartBtn, SIGNAL(clicked()), this, SLOT(newGame()));
 }
 
