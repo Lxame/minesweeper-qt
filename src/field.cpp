@@ -190,7 +190,7 @@ void field::leftReleased()
         {
             // lose
             c->setIcon(iqons.value(ICON::mine_boom));
-            lose();
+            lose(x, y);
         }
         else
         {
@@ -263,7 +263,7 @@ void field::openNearest(ushort x, ushort y)
                     if (c->isMine())
                     {
                         c->setIcon(iqons.value(ICON::mine_boom));
-                        lose();
+                        lose(x, y);
                     }
                     else
                     {
@@ -282,7 +282,7 @@ void field::openNearest(ushort x, ushort y)
                     if (!c->isMine())
                     {
                         c->setIcon(iqons.value(ICON::red_flag));
-                        lose();
+                        lose(x, y);
                     }
                 }
             }
@@ -347,9 +347,47 @@ void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
     }
 }
 
-void field::lose()
+void field::lose(ushort x, ushort y)
 {
     std::cout << "You lose" << std::endl;
+
+    cell* c = cells.at(y).at(x);
+    c->setStatus(cell::status::open);
+    c->setIcon(iqons.value(ICON::mine_boom));
+    
+    updateFieldAfterLose();
+}
+
+void field::updateFieldAfterLose()
+{
+    for (ushort y = 0; y < m_height; ++y)
+    {
+        for (ushort x = 0; x < m_width; ++x)
+        {
+            cell* c = cells.at(y).at(x);
+            bool isMine = c->isMine();
+
+            switch (c->getStatus()) 
+            {
+            case cell::status::deflt:
+                if (isMine)
+                {
+                    c->setIcon(iqons.value(ICON::mine));
+                } 
+                break;
+            case cell::status::flag:
+                if (!isMine)
+                {
+                    c->setIcon(iqons.value(ICON::red_flag));
+                }
+                break;
+            case cell::status::open:
+                break;
+            default:
+                break;
+            }
+        }
+    }
 }
 
 void field::win()

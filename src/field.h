@@ -47,7 +47,8 @@ private:
     void initCells();
     void initRes();
     ushort countMinesAroundCell(ushort x, ushort y);
-    void lose();
+    void lose(ushort x, ushort y);
+    void updateFieldAfterLose();
     void win();
     void openNearest(ushort x, ushort y);    
     void lightNearest(ushort x, ushort y, bool show);
