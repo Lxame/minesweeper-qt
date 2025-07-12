@@ -21,20 +21,62 @@ field::field(ushort width, ushort height, ushort minesCount)
 void field::initRes()
 {
     int scale = 32;
-    QIcon def       (QPixmap(":images/default.png")     .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon one       (QPixmap(":images/one.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon two       (QPixmap(":images/two.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon three     (QPixmap(":images/three.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon four      (QPixmap(":images/four.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon five      (QPixmap(":images/five.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon six       (QPixmap(":images/six.png")         .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon seven     (QPixmap(":images/seven.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon eight     (QPixmap(":images/eight.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon empty     (QPixmap(":images/empty.png")       .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon flag      (QPixmap(":images/flag.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon red_flag  (QPixmap(":images/red_flag.png")    .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon mine      (QPixmap(":images/mine.png")        .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    QIcon mine_boom (QPixmap(":images/mine_boom.png")   .scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+    QIcon def;
+    def.addPixmap(QPixmap(":images/default.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    def.addPixmap(QPixmap(":images/default.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon one;
+    one.addPixmap(QPixmap(":images/one.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    one.addPixmap(QPixmap(":images/one.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon two;
+    two.addPixmap(QPixmap(":images/two.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    two.addPixmap(QPixmap(":images/two.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon three;
+    three.addPixmap(QPixmap(":images/three.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    three.addPixmap(QPixmap(":images/three.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon four;
+    four.addPixmap(QPixmap(":images/four.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    four.addPixmap(QPixmap(":images/four.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon five;
+    five.addPixmap(QPixmap(":images/five.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    five.addPixmap(QPixmap(":images/five.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon six;
+    six.addPixmap(QPixmap(":images/six.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    six.addPixmap(QPixmap(":images/six.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon seven;
+    seven.addPixmap(QPixmap(":images/seven.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    seven.addPixmap(QPixmap(":images/seven.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon eight;
+    eight.addPixmap(QPixmap(":images/eight.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    eight.addPixmap(QPixmap(":images/eight.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon empty;
+    empty.addPixmap(QPixmap(":images/empty.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    empty.addPixmap(QPixmap(":images/empty.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon flag;
+    flag.addPixmap(QPixmap(":images/flag.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    flag.addPixmap(QPixmap(":images/flag.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon red_flag;
+    red_flag.addPixmap(QPixmap(":images/red_flag.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    red_flag.addPixmap(QPixmap(":images/red_flag.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon mine;
+    mine.addPixmap(QPixmap(":images/mine.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    mine.addPixmap(QPixmap(":images/mine.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
+
+    QIcon mine_boom;
+    mine_boom.addPixmap(QPixmap(":images/mine_boom.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Normal);
+    mine_boom.addPixmap(QPixmap(":images/mine_boom.png").scaled(scale, scale, Qt::KeepAspectRatio, Qt::SmoothTransformation), QIcon::Mode::Disabled);
 
     std::cout << "insert..." << std::endl;
     iqons.insert(ICON::def, def);
@@ -356,6 +398,8 @@ void field::lose(ushort x, ushort y)
     c->setIcon(iqons.value(ICON::mine_boom));
     
     updateFieldAfterLose();
+
+    this->setEnabled(false);
 }
 
 void field::updateFieldAfterLose()
