@@ -375,14 +375,6 @@ void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
             {
                 cell *c = cells.at(row).at(col);
                 increase ? c->increaseFlagsCount() : c->decreaseFlagsCount();
-                // if (increase)
-                // {
-                //     c->increaseFlagsCount();
-                // }
-                // else
-                // {
-                //     c->decreaseFlagsCount();
-                // }
             }
         }
     }
