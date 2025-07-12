@@ -374,16 +374,15 @@ void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
             else if (row >= 0 && row < m_height && col >= 0 && col < m_width)
             {
                 cell *c = cells.at(row).at(col);
-                if (increase)
-                {
-                    c->increaseFlagsCount();
-                    std::cout << "flags++" << std::endl;
-                }
-                else
-                {
-                    c->decreaseFlagsCount();
-                    std::cout << "flags--" << std::endl;
-                }
+                increase ? c->increaseFlagsCount() : c->decreaseFlagsCount();
+                // if (increase)
+                // {
+                //     c->increaseFlagsCount();
+                // }
+                // else
+                // {
+                //     c->decreaseFlagsCount();
+                // }
             }
         }
     }
@@ -394,8 +393,11 @@ void field::lose(ushort x, ushort y)
     std::cout << "You lose" << std::endl;
 
     cell* c = cells.at(y).at(x);
-    c->setStatus(cell::status::open);
-    c->setIcon(iqons.value(ICON::mine_boom));
+    if (c->getStatus() == cell::status::deflt)
+    {
+        c->setStatus(cell::status::open);
+        c->setIcon(iqons.value(ICON::mine_boom));
+    }
     
     updateFieldAfterLose();
 
