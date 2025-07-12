@@ -12,9 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     pChooseDifficultyLbl->setAlignment(Qt::AlignCenter);
 
     m_pDifficultyCmb = new QComboBox();
-    m_pDifficultyCmb->addItem("Easy");
-    m_pDifficultyCmb->addItem("Medium");
-    m_pDifficultyCmb->addItem("Hard");
+    m_pDifficultyCmb->addItem("Easy", QVariant(1));
+    m_pDifficultyCmb->addItem("Medium", QVariant(2));
+    m_pDifficultyCmb->addItem("Hard", QVariant(3));
     m_pDifficultyCmb->setFixedSize(100, 25);
 
     QVBoxLayout *pLayout = new QVBoxLayout;
@@ -28,7 +28,34 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     game = new field(20, 10, 30);
 
-    connect(m_pStartBtn, SIGNAL(clicked()), game, SLOT(show()));
+    connect(m_pStartBtn, SIGNAL(clicked()), this, SLOT(newGame()));
 }
 
-MainWindow::~MainWindow() {}
+void MainWindow::newGame()
+{
+    ushort width = 9, height = 9, mines = 10;
+
+    switch ((m_pDifficultyCmb->currentData().toInt()))
+    {
+    case 1:
+        width = 9;
+        height = 9;
+        mines = 10;
+        break;
+    case 2:
+        width = 16;
+        height = 16;
+        mines = 40;
+        break;
+    case 3:
+        width = 30;
+        height = 16;
+        mines = 30;
+        break;
+    default:
+        break;
+    }
+
+    field* newGame = new field(width, height, mines);
+    newGame->show();
+}

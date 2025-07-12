@@ -13,13 +13,16 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() {};
 
 private:
     QPushButton *m_pStartBtn;
     QComboBox *m_pDifficultyCmb;
 
     field* game;
+
+private slots:
+    void newGame();
 
 };
 
