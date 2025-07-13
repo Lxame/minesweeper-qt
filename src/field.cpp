@@ -11,7 +11,11 @@ field::field(QWidget *parent) : QWidget{parent}
 }
 
 field::field(ushort width, ushort height, ushort minesCount)
-    : m_width(width), m_height(height), m_minesCount(minesCount)
+    : m_width(width), 
+    m_height(height),
+    m_minesCount(minesCount),
+    m_flagsPlaced(0),
+    m_correctedFlagsPlaced(0) 
 {
     initRes();
     formField();
@@ -273,17 +277,28 @@ void field::rightClick()
     case cell::status::deflt:
         c->setIcon(iqons.value(ICON::flag));
         c->setStatus(cell::status::flag);
+        ++m_flagsPlaced;
+        if(c->isMine())
+            ++m_correctedFlagsPlaced;
         updateNearestFlagCount(x, y, true);
         break;
     case cell::status::flag:
         c->setIcon(iqons.value(ICON::def));
         c->setStatus(cell::status::deflt);
+        --m_flagsPlaced;
+        if(c->isMine())
+            --m_correctedFlagsPlaced;
         updateNearestFlagCount(x, y, false);
         break;
     case cell::status::open:
         break;
     default:
         break;
+    }
+
+    if (m_correctedFlagsPlaced == m_minesCount && m_correctedFlagsPlaced == m_flagsPlaced)
+    {
+        win();
     }
 }
 

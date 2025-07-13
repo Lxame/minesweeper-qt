@@ -48,7 +48,7 @@ void MainWindow::newGame()
     case 3:
         width = 30;
         height = 16;
-        mines = 30;
+        mines = 99;
         break;
     default:
         break;

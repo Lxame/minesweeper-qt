@@ -36,6 +36,8 @@ private:
     ushort m_width;
     ushort m_height;
     ushort m_minesCount;
+    ushort m_flagsPlaced;
+    ushort m_correctedFlagsPlaced;
     quint16 a; // TODO change all ushort to quint16 
     std::vector<std::vector<int>> fld;
     QVector<QVector<cell*>> cells;
