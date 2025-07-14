@@ -1,17 +1,20 @@
 #include <QRandomGenerator>
-#include <QGridLayout>
+#include <QTimer>
+#include <QStyle>
 
 #include <iostream>
 
 #include "field.h"
 
-field::field(QWidget *parent) : QWidget{parent}
+const int SIZE = 32;
+
+field::field(QWidget *parent) : QWidget(parent)
 {
 
 }
 
-field::field(ushort width, ushort height, ushort minesCount)
-    : m_width(width), 
+field::field(ushort width, ushort height, ushort minesCount) : 
+    m_width(width), 
     m_height(height),
     m_minesCount(minesCount),
     m_flagsPlaced(0),
@@ -19,7 +22,7 @@ field::field(ushort width, ushort height, ushort minesCount)
 {
     initRes();
     formField();
-    initCells();
+    initField();
 }
 
 void field::initRes()
@@ -136,7 +139,39 @@ void field::generateMines()
     }
 }
 
-void field::initCells()
+void field::initField()
+{
+    QVBoxLayout* main = new QVBoxLayout();
+    QHBoxLayout* controls = new QHBoxLayout();
+
+    lcdmines = new LCDmines(m_minesCount, SIZE * 3, SIZE * 2);
+
+    smile = new QPushButton("restart");
+
+    timer = new QLCDNumber();
+    timer->setDigitCount(3);
+    timer->setFixedSize(SIZE * 3, SIZE * 2);
+    timer->display(999);
+
+    controls->addWidget(lcdmines,   0, Qt::AlignLeft);
+    controls->addWidget(smile,       0, Qt::AlignCenter);
+    controls->addWidget(timer,       0, Qt::AlignRight);
+    controls->setMargin(SIZE / 2);
+
+    QGridLayout* field =  initCells();
+
+    main->addLayout(controls);
+    main->addLayout(field);
+
+    main->setSpacing(0);
+    main->setContentsMargins(0, 0, 0, 0);
+	main->setSizeConstraint(QLayout::SetFixedSize);
+    main->setMargin(SIZE / 2);
+
+    this->setLayout(main);
+}
+
+QGridLayout* field::initCells()
 {
     QGridLayout *grid = new QGridLayout();
     int SIZE = 32;
@@ -173,7 +208,7 @@ void field::initCells()
 	grid->setSizeConstraint(QLayout::SetFixedSize);
     grid->setMargin(SIZE / 2);
 
-    this->setLayout(grid);
+    return grid;
 }
 
 ushort field::countMinesAroundCell(ushort x, ushort y)
@@ -275,20 +310,10 @@ void field::rightClick()
     switch (c->getStatus()) 
     {
     case cell::status::deflt:
-        c->setIcon(iqons.value(ICON::flag));
-        c->setStatus(cell::status::flag);
-        ++m_flagsPlaced;
-        if(c->isMine())
-            ++m_correctedFlagsPlaced;
-        updateNearestFlagCount(x, y, true);
+        placeFlag(c, x, y);
         break;
     case cell::status::flag:
-        c->setIcon(iqons.value(ICON::def));
-        c->setStatus(cell::status::deflt);
-        --m_flagsPlaced;
-        if(c->isMine())
-            --m_correctedFlagsPlaced;
-        updateNearestFlagCount(x, y, false);
+        removeFlag(c, x, y);
         break;
     case cell::status::open:
         break;
@@ -300,6 +325,28 @@ void field::rightClick()
     {
         win();
     }
+}
+
+void field::placeFlag(cell* c, const ushort& x, const ushort& y)
+{
+    c->setIcon(iqons.value(ICON::flag));
+    c->setStatus(cell::status::flag);
+    ++m_flagsPlaced;
+    lcdmines->decrease();
+    if(c->isMine())
+        ++m_correctedFlagsPlaced;
+    updateNearestFlagCount(x, y, true);
+}
+
+void field::removeFlag(cell* c, const ushort& x, const ushort& y)
+{
+    c->setIcon(iqons.value(ICON::def));
+    c->setStatus(cell::status::deflt);
+    --m_flagsPlaced;
+    lcdmines->increase();
+    if(c->isMine())
+        --m_correctedFlagsPlaced;
+    updateNearestFlagCount(x, y, false);
 }
 
 void field::openNearest(ushort x, ushort y)
@@ -398,6 +445,7 @@ void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
 void field::lose(ushort x, ushort y)
 {
     std::cout << "You lose" << std::endl;
+    smile->setText("lose :(");
 
     cell* c = cells.at(y).at(x);
     if (c->getStatus() == cell::status::deflt)
@@ -446,4 +494,5 @@ void field::updateFieldAfterLose()
 void field::win()
 {
     std::cout << "You win!!!" << std::endl;
+    smile->setText("win :)");
 }

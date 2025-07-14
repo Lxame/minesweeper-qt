@@ -7,10 +7,12 @@ SOURCES += \
     src/cell.cpp \
     src/field.cpp \
     src/mainwindow.cpp \
+    src/lcdmines.cpp \
 
 HEADERS += \
     src/cell.h \
     src/field.h \
     src/mainwindow.h \
+    src/lcdmines.h \
 
 RESOURCES += res/res.qrc

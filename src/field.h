@@ -4,9 +4,11 @@
 #include <QWidget>
 #include <QIcon>
 #include <QMap>
-//#include <list>
+#include <QLCDNumber>
+#include <QGridLayout>
 
 #include "cell.h"
+#include "lcdmines.h"
 
 class field : public QWidget
 {
@@ -40,18 +42,31 @@ private:
     ushort m_correctedFlagsPlaced;
     quint16 a; // TODO change all ushort to quint16 
     std::vector<std::vector<int>> fld;
+
     QVector<QVector<cell*>> cells;
     QMap<ICON, QIcon> iqons;
+    LCDmines* lcdmines;
+    QLCDNumber* timer; // пока заглушка
+    QPushButton* smile;
 
 private:
-    bool formField();
-    void generateMines();
-    void initCells();
     void initRes();
+    bool formField();
+    void initField();
+    void generateMines();
+
+    QGridLayout* initCells();
     ushort countMinesAroundCell(ushort x, ushort y);
+
+    void placeFlag(cell* c, const ushort& x, const ushort& y);
+    void removeFlag(cell* c, const ushort& x, const ushort& y);
+
     void lose(ushort x, ushort y);
-    void updateFieldAfterLose();
     void win();
+
+    void updateFieldAfterLose();
+    void updateFieldAfterWin();
+
     void openNearest(ushort x, ushort y);    
     void lightNearest(ushort x, ushort y, bool show);
     void updateNearestFlagCount(ushort x, ushort y, bool increase);
