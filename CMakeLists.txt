@@ -24,6 +24,8 @@ add_executable(minesweeper-qt
     src/mainwindow.h
     src/lcdmines.cpp
     src/lcdmines.h
+    src/lcdtimer.cpp
+    src/lcdtimer.h
     res/res.qrc
 )
 

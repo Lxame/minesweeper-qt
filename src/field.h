@@ -9,6 +9,7 @@
 
 #include "cell.h"
 #include "lcdmines.h"
+#include "lcdtimer.h"
 
 class field : public QWidget
 {
@@ -46,7 +47,7 @@ private:
     QVector<QVector<cell*>> cells;
     QMap<ICON, QIcon> iqons;
     LCDmines* lcdmines;
-    QLCDNumber* timer; // пока заглушка
+    LCDtimer* timer;
     QPushButton* smile;
 
 private:

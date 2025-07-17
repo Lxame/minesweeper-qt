@@ -148,14 +148,12 @@ void field::initField()
 
     smile = new QPushButton("restart");
 
-    timer = new QLCDNumber();
-    timer->setDigitCount(3);
-    timer->setFixedSize(SIZE * 3, SIZE * 2);
-    timer->display(999);
+    timer = new LCDtimer(SIZE * 3, SIZE * 2);
+    timer->start();
 
     controls->addWidget(lcdmines,   0, Qt::AlignLeft);
-    controls->addWidget(smile,       0, Qt::AlignCenter);
-    controls->addWidget(timer,       0, Qt::AlignRight);
+    controls->addWidget(smile,      0, Qt::AlignCenter);
+    controls->addWidget(timer,      0, Qt::AlignRight);
     controls->setMargin(SIZE / 2);
 
     QGridLayout* field =  initCells();
@@ -495,4 +493,5 @@ void field::win()
 {
     std::cout << "You win!!!" << std::endl;
     smile->setText("win :)");
+    timer->stop();
 }
