@@ -451,7 +451,7 @@ void field::disableLayout(QLayout* layout, bool disable)
         QWidget* widget = layout->itemAt(i)->widget();
         if (widget)
         {
-            widget->setDisabled(disable);  // или setEnabled(!disable)
+            widget->setDisabled(disable);
         }
     }
 }
@@ -468,9 +468,8 @@ void field::lose(ushort x, ushort y)
         c->setIcon(iqons.value(ICON::mine_boom));
     }
     
+    timer->stop();
     updateFieldAfterLose();
-
-    // this->setEnabled(false);
     disableLayout(fieldLayout, true);
 }
 
@@ -519,6 +518,7 @@ void field::restartGame()
     resetCells();
     disableLayout(fieldLayout, false);
     timer->reset();
+    timer->start();
 }
 
 void field::resetCells()
@@ -533,6 +533,7 @@ void field::resetCells()
             c->setIcon(iqons.value(ICON::def));
             c->setMine(fld.at(y).at(x) == -1);
             c->setMinesAround(c->isMine() ? -1 : countMinesAroundCell(x, y));
+            c->resetFlagsCount();
         }
     }
 }

@@ -70,6 +70,11 @@ public:
             --m_flagsAround;
     }
 
+    void resetFlagsCount()
+    {
+        m_flagsAround = 0;
+    }
+
     ushort getFlagsCount()
     {
         return m_flagsAround;
