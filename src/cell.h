@@ -21,14 +21,24 @@ public:
         return m_y;
     }
 
-    ushort mines()
+    ushort minesAround()
     {
         return m_minesAround;
+    }
+
+    void setMinesAround(ushort mines)
+    {
+        m_minesAround = mines;
     }
 
     bool isMine()
     {
         return m_isMine;
+    }
+
+    void setMine(bool flag)
+    {
+        m_isMine = flag;
     }
 
     enum status

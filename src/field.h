@@ -55,6 +55,7 @@ private:
     bool formField();
     void initField();
     void generateMines();
+    void resetCells();
 
     QGridLayout* initCells();
     ushort countMinesAroundCell(ushort x, ushort y);
@@ -76,6 +77,8 @@ private slots:
     void leftPressed();
     void leftReleased();
     void rightClick();
+
+    void restartGame();
 };
 
 #endif // FIELD_H

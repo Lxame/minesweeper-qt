@@ -105,6 +105,7 @@ void field::initRes()
 
 bool field::formField()
 {
+    fld.clear();
     fld.assign(m_height, std::vector<int>(m_width, 0));
 
     generateMines();
@@ -147,6 +148,7 @@ void field::initField()
     lcdmines = new LCDmines(m_minesCount, SIZE * 3, SIZE * 2);
 
     smile = new QPushButton("restart");
+    connect(smile, SIGNAL(clicked()), this, SLOT(restartGame()));
 
     timer = new LCDtimer(SIZE * 3, SIZE * 2);
     timer->start();
@@ -230,7 +232,7 @@ void field::leftPressed()
 {
     cell *c = qobject_cast<cell*>(sender());
 
-    ushort mines = c->mines();
+    ushort mines = c->minesAround();
     ushort x = c->getX();
     ushort y = c->getY(); 
 
@@ -258,7 +260,7 @@ void field::leftReleased()
     std::cout << "flags: " << c->getFlagsCount() << "\t";
     std::cout << "\n";
 
-    ushort mines = c->mines();
+    ushort mines = c->minesAround();
     ushort x = c->getX();
     ushort y = c->getY(); 
 
@@ -369,7 +371,7 @@ void field::openNearest(ushort x, ushort y)
                     }
                     else
                     {
-                        const ushort mines = c->mines();
+                        const ushort mines = c->minesAround();
                         c->setIcon(iqons.value(static_cast<ICON>(mines)));
                         c->setStatus(cell::status::open);
 
@@ -495,3 +497,27 @@ void field::win()
     smile->setText("win :)");
     timer->stop();
 }
+
+void field::restartGame()
+{
+    formField();
+    resetCells();
+    timer->reset();
+}
+
+void field::resetCells()
+{
+    for (ushort y = 0; y < m_height; ++y)
+    {
+        for (ushort x = 0; x < m_width; ++x)
+        {
+            cell* c = cells.at(y).at(x);
+
+            c->setStatus(cell::status::deflt);
+            c->setIcon(iqons.value(ICON::def));
+            c->setMine(fld.at(y).at(x) == -1);
+            c->setMinesAround(c->isMine() ? -1 : countMinesAroundCell(x, y));
+        }
+    }
+}
+
