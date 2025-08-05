@@ -142,38 +142,40 @@ void field::generateMines()
 
 void field::initField()
 {
-    QVBoxLayout* main = new QVBoxLayout();
-    QHBoxLayout* controls = new QHBoxLayout();
+    mainLayout = new QVBoxLayout(this);
+    controlsLayout = new QHBoxLayout(this);
 
-    lcdmines = new LCDmines(m_minesCount, SIZE * 3, SIZE * 2);
+    lcdmines = new LCDmines(m_minesCount, SIZE * 3, SIZE * 2, this);
 
-    smile = new QPushButton("restart");
+    smile = new QPushButton("restart", this);
     connect(smile, SIGNAL(clicked()), this, SLOT(restartGame()));
 
-    timer = new LCDtimer(SIZE * 3, SIZE * 2);
+    timer = new LCDtimer(SIZE * 3, SIZE * 2, this);
     timer->start();
 
-    controls->addWidget(lcdmines,   0, Qt::AlignLeft);
-    controls->addWidget(smile,      0, Qt::AlignCenter);
-    controls->addWidget(timer,      0, Qt::AlignRight);
-    controls->setMargin(SIZE / 2);
+    controlsLayout->addWidget(lcdmines,   0, Qt::AlignLeft);
+    controlsLayout->addWidget(smile,      0, Qt::AlignCenter);
+    controlsLayout->addWidget(timer,      0, Qt::AlignRight);
+    controlsLayout->setMargin(SIZE / 2);
 
-    QGridLayout* field =  initCells();
+    // fieldLayout = 
+    initCells();
 
-    main->addLayout(controls);
-    main->addLayout(field);
+    mainLayout->addLayout(controlsLayout);
+    mainLayout->addLayout(fieldLayout);
 
-    main->setSpacing(0);
-    main->setContentsMargins(0, 0, 0, 0);
-	main->setSizeConstraint(QLayout::SetFixedSize);
-    main->setMargin(SIZE / 2);
+    mainLayout->setSpacing(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+    mainLayout->setMargin(SIZE / 2);
 
-    this->setLayout(main);
+    this->setLayout(mainLayout);
 }
 
 QGridLayout* field::initCells()
 {
-    QGridLayout *grid = new QGridLayout();
+    // QGridLayout *grid = new QGridLayout(this);
+    fieldLayout = new QGridLayout(this);
     int SIZE = 32;
 
     for (ushort y = 0; y < m_height; ++y)
@@ -197,18 +199,18 @@ QGridLayout* field::initCells()
             }
 
             row.push_back(newCell);
-            grid->addWidget(newCell, y, x);
+            fieldLayout->addWidget(newCell, y, x);
         }
         cells.push_back(row);
         std::cout << std::endl;
     }
 
-    grid->setSpacing(0);
-    grid->setContentsMargins(0, 0, 0, 0);
-	grid->setSizeConstraint(QLayout::SetFixedSize);
-    grid->setMargin(SIZE / 2);
+    fieldLayout->setSpacing(0);
+    fieldLayout->setContentsMargins(0, 0, 0, 0);
+	fieldLayout->setSizeConstraint(QLayout::SetFixedSize);
+    fieldLayout->setMargin(SIZE / 2);
 
-    return grid;
+    return fieldLayout;
 }
 
 ushort field::countMinesAroundCell(ushort x, ushort y)
@@ -442,6 +444,18 @@ void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
     }
 }
 
+void field::disableLayout(QLayout* layout, bool disable) 
+{
+    for (int i = 0; i < layout->count(); ++i) 
+    {
+        QWidget* widget = layout->itemAt(i)->widget();
+        if (widget)
+        {
+            widget->setDisabled(disable);  // или setEnabled(!disable)
+        }
+    }
+}
+
 void field::lose(ushort x, ushort y)
 {
     std::cout << "You lose" << std::endl;
@@ -456,7 +470,8 @@ void field::lose(ushort x, ushort y)
     
     updateFieldAfterLose();
 
-    this->setEnabled(false);
+    // this->setEnabled(false);
+    disableLayout(fieldLayout, true);
 }
 
 void field::updateFieldAfterLose()
@@ -502,6 +517,7 @@ void field::restartGame()
 {
     formField();
     resetCells();
+    disableLayout(fieldLayout, false);
     timer->reset();
 }
 
@@ -520,4 +536,3 @@ void field::resetCells()
         }
     }
 }
-

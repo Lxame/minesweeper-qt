@@ -46,6 +46,9 @@ private:
 
     QVector<QVector<cell*>> cells;
     QMap<ICON, QIcon> iqons;
+    QVBoxLayout* mainLayout;
+    QHBoxLayout* controlsLayout;
+    QGridLayout* fieldLayout;
     LCDmines* lcdmines;
     LCDtimer* timer;
     QPushButton* smile;
@@ -56,6 +59,7 @@ private:
     void initField();
     void generateMines();
     void resetCells();
+    void disableLayout(QLayout* layout, bool disable = true);
 
     QGridLayout* initCells();
     ushort countMinesAroundCell(ushort x, ushort y);
