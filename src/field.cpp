@@ -13,7 +13,7 @@ field::field(QWidget *parent) : QWidget(parent)
 
 }
 
-field::field(ushort width, ushort height, ushort minesCount) : 
+field::field(quint16 width, quint16 height, quint16 minesCount) : 
     m_width(width), 
     m_height(height),
     m_minesCount(minesCount),
@@ -125,7 +125,7 @@ bool field::formField()
 
 void field::generateMines()
 {  
-    ushort minesCreated = 0;
+    quint16 minesCreated = 0;
 
     while (minesCreated < m_minesCount)
     {
@@ -178,10 +178,10 @@ QGridLayout* field::initCells()
     fieldLayout = new QGridLayout(this);
     int SIZE = 32;
 
-    for (ushort y = 0; y < m_height; ++y)
+    for (quint16 y = 0; y < m_height; ++y)
     {
         QVector<cell*> row;
-        for (ushort x = 0; x < m_width; ++x)
+        for (quint16 x = 0; x < m_width; ++x)
         {
             bool isMine = fld.at(y).at(x) == -1;
             cell *newCell = new cell(x, y, isMine ? -1 : countMinesAroundCell(x, y), isMine);
@@ -213,9 +213,9 @@ QGridLayout* field::initCells()
     return fieldLayout;
 }
 
-ushort field::countMinesAroundCell(ushort x, ushort y)
+quint16 field::countMinesAroundCell(quint16 x, quint16 y)
 {
-    ushort mines_count = 0;
+    quint16 mines_count = 0;
     for (int col = x - 1; col <= x + 1; ++col)
     {
         for (int row = y - 1; row <= y + 1; ++row)
@@ -234,9 +234,9 @@ void field::leftPressed()
 {
     cell *c = qobject_cast<cell*>(sender());
 
-    ushort mines = c->minesAround();
-    ushort x = c->getX();
-    ushort y = c->getY(); 
+    quint16 mines = c->minesAround();
+    quint16 x = c->getX();
+    quint16 y = c->getY(); 
 
     switch (c->getStatus()) 
     {
@@ -262,9 +262,9 @@ void field::leftReleased()
     std::cout << "flags: " << c->getFlagsCount() << "\t";
     std::cout << "\n";
 
-    ushort mines = c->minesAround();
-    ushort x = c->getX();
-    ushort y = c->getY(); 
+    quint16 mines = c->minesAround();
+    quint16 x = c->getX();
+    quint16 y = c->getY(); 
 
     switch (c->getStatus()) 
     {
@@ -303,8 +303,8 @@ void field::leftReleased()
 void field::rightClick()
 {
     cell *c = qobject_cast<cell*>(sender());
-    ushort x = c->getX();
-    ushort y = c->getY();
+    quint16 x = c->getX();
+    quint16 y = c->getY();
 
     std::cout << "RIGHT button clicked x: " << c->getX() << " y: " << c->getY() << "\t";
     std::cout << "status: " << c->getStatus() << std::endl;
@@ -329,7 +329,7 @@ void field::rightClick()
     }
 }
 
-void field::placeFlag(cell* c, const ushort& x, const ushort& y)
+void field::placeFlag(cell* c, const quint16& x, const quint16& y)
 {
     c->setIcon(iqons.value(ICON::flag));
     c->setStatus(cell::status::flag);
@@ -340,7 +340,7 @@ void field::placeFlag(cell* c, const ushort& x, const ushort& y)
     updateNearestFlagCount(x, y, true);
 }
 
-void field::removeFlag(cell* c, const ushort& x, const ushort& y)
+void field::removeFlag(cell* c, const quint16& x, const quint16& y)
 {
     c->setIcon(iqons.value(ICON::def));
     c->setStatus(cell::status::deflt);
@@ -351,7 +351,7 @@ void field::removeFlag(cell* c, const ushort& x, const ushort& y)
     updateNearestFlagCount(x, y, false);
 }
 
-void field::openNearest(ushort x, ushort y)
+void field::openNearest(quint16 x, quint16 y)
 {
     for (int col = x - 1; col <= x + 1; ++col)
     {
@@ -373,7 +373,7 @@ void field::openNearest(ushort x, ushort y)
                     }
                     else
                     {
-                        const ushort mines = c->minesAround();
+                        const quint16 mines = c->minesAround();
                         c->setIcon(iqons.value(static_cast<ICON>(mines)));
                         c->setStatus(cell::status::open);
 
@@ -396,7 +396,7 @@ void field::openNearest(ushort x, ushort y)
     }
 }
 
-void field::lightNearest(ushort x, ushort y, bool show)
+void field::lightNearest(quint16 x, quint16 y, bool show)
 {
     for (int col = x - 1; col <= x + 1; ++col)
     {
@@ -425,7 +425,7 @@ void field::lightNearest(ushort x, ushort y, bool show)
     }
 }
 
-void field::updateNearestFlagCount(ushort x, ushort y, bool increase)
+void field::updateNearestFlagCount(quint16 x, quint16 y, bool increase)
 {
     for (int col = x - 1; col <= x + 1; ++col)
     {
@@ -456,7 +456,7 @@ void field::disableLayout(QLayout* layout, bool disable)
     }
 }
 
-void field::lose(ushort x, ushort y)
+void field::lose(quint16 x, quint16 y)
 {
     std::cout << "You lose" << std::endl;
     smile->setText("lose :(");
@@ -475,9 +475,9 @@ void field::lose(ushort x, ushort y)
 
 void field::updateFieldAfterLose()
 {
-    for (ushort y = 0; y < m_height; ++y)
+    for (quint16 y = 0; y < m_height; ++y)
     {
-        for (ushort x = 0; x < m_width; ++x)
+        for (quint16 x = 0; x < m_width; ++x)
         {
             cell* c = cells.at(y).at(x);
             bool isMine = c->isMine();
@@ -517,15 +517,20 @@ void field::restartGame()
     formField();
     resetCells();
     disableLayout(fieldLayout, false);
+
     timer->reset();
     timer->start();
+
+    lcdmines->reset(m_minesCount);
+
+    smile->setText("restart");
 }
 
 void field::resetCells()
 {
-    for (ushort y = 0; y < m_height; ++y)
+    for (quint16 y = 0; y < m_height; ++y)
     {
-        for (ushort x = 0; x < m_width; ++x)
+        for (quint16 x = 0; x < m_width; ++x)
         {
             cell* c = cells.at(y).at(x);
 

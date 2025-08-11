@@ -5,7 +5,7 @@ LCDmines::LCDmines(QWidget *parent) : QLCDNumber(parent)
 
 }
 
-LCDmines::LCDmines(ushort mines, int width, int height, QWidget *parent) : QLCDNumber(parent), m_minesLeft(mines)
+LCDmines::LCDmines(qint8 mines, int width, int height, QWidget *parent) : QLCDNumber(parent), m_minesLeft(mines)
 {
     setDigitCount(3);
     setFixedSize(width, height);
@@ -21,5 +21,11 @@ void LCDmines::increase()
 void LCDmines::decrease()
 {
     m_minesLeft--;
+    display(m_minesLeft);
+}
+
+void LCDmines::reset(qint8 mines)
+{
+    m_minesLeft = mines;
     display(m_minesLeft);
 }

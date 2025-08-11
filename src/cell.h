@@ -9,24 +9,24 @@ class cell : public QPushButton
     Q_OBJECT
 public:
     explicit cell(QPushButton *parent = nullptr);
-    cell(ushort x, ushort y, ushort minesAround, bool isMine);
+    cell(quint16 x, quint16 y, quint16 minesAround, bool isMine);
 
-    ushort getX()
+    quint16 getX()
     {
         return m_x;
     }
 
-    ushort getY()
+    quint16 getY()
     {
         return m_y;
     }
 
-    ushort minesAround()
+    quint16 minesAround()
     {
         return m_minesAround;
     }
 
-    void setMinesAround(ushort mines)
+    void setMinesAround(quint16 mines)
     {
         m_minesAround = mines;
     }
@@ -75,16 +75,16 @@ public:
         m_flagsAround = 0;
     }
 
-    ushort getFlagsCount()
+    quint16 getFlagsCount()
     {
         return m_flagsAround;
     }
 
 private:
     status m_current;
-    ushort m_x, m_y;
-    ushort m_minesAround;
-    ushort m_flagsAround;
+    quint16 m_x, m_y;
+    quint16 m_minesAround;
+    quint16 m_flagsAround;
     bool m_isMine;
 
 signals:

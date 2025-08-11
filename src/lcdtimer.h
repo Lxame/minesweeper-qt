@@ -18,7 +18,7 @@ public:
 
 private:
     QTimer* m_timer;
-    ushort m_time;
+    quint16 m_time;
 
 private slots:
     void increaseTimer();

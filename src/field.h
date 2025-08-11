@@ -16,7 +16,7 @@ class field : public QWidget
     Q_OBJECT
 public:
     explicit field(QWidget *parent = nullptr);
-    field(ushort width, ushort height, ushort minesCount);
+    field(quint16 width, quint16 height, quint16 minesCount);
 
 private:
     enum ICON
@@ -36,12 +36,12 @@ private:
         mine = 64,
         mine_boom = 128
     };
-    ushort m_width;
-    ushort m_height;
-    ushort m_minesCount;
-    ushort m_flagsPlaced;
-    ushort m_correctedFlagsPlaced;
-    quint16 a; // TODO change all ushort to quint16 
+    
+    quint16 m_width;
+    quint16 m_height;
+    quint16 m_minesCount;
+    quint16 m_flagsPlaced;
+    quint16 m_correctedFlagsPlaced;
     std::vector<std::vector<int>> fld;
 
     QVector<QVector<cell*>> cells;
@@ -62,20 +62,20 @@ private:
     void disableLayout(QLayout* layout, bool disable = true);
 
     QGridLayout* initCells();
-    ushort countMinesAroundCell(ushort x, ushort y);
+    quint16 countMinesAroundCell(quint16 x, quint16 y);
 
-    void placeFlag(cell* c, const ushort& x, const ushort& y);
-    void removeFlag(cell* c, const ushort& x, const ushort& y);
+    void placeFlag(cell* c, const quint16& x, const quint16& y);
+    void removeFlag(cell* c, const quint16& x, const quint16& y);
 
-    void lose(ushort x, ushort y);
+    void lose(quint16 x, quint16 y);
     void win();
 
     void updateFieldAfterLose();
     void updateFieldAfterWin();
 
-    void openNearest(ushort x, ushort y);    
-    void lightNearest(ushort x, ushort y, bool show);
-    void updateNearestFlagCount(ushort x, ushort y, bool increase);
+    void openNearest(quint16 x, quint16 y);    
+    void lightNearest(quint16 x, quint16 y, bool show);
+    void updateNearestFlagCount(quint16 x, quint16 y, bool increase);
 
 private slots:
     void leftPressed();

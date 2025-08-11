@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
 void MainWindow::newGame()
 {
-    ushort width = 9, height = 9, mines = 10;
+    quint16 width = 9, height = 9, mines = 10;
 
     switch ((m_pDifficultyCmb->currentData().toInt()))
     {
