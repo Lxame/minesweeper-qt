@@ -105,12 +105,12 @@ void field::initRes()
 
 bool field::formField()
 {
-    fld.clear();
-    fld.assign(m_height, std::vector<int>(m_width, 0));
+    m_minesField.clear();
+    m_minesField.assign(m_height, std::vector<bool>(m_width, false));
 
     generateMines();
 
-    for (const auto &col : fld)
+    for (const auto &col : m_minesField)
     {
         for (const auto &row : col)
         {
@@ -132,9 +132,9 @@ void field::generateMines()
         int x = QRandomGenerator::global()->bounded(0, m_width);
         int y = QRandomGenerator::global()->bounded(0, m_height);
 
-        if (fld.at(y).at(x) == 0)
+        if (m_minesField.at(y).at(x) == false)
         {
-            fld.at(y).at(x) = -1;
+            m_minesField.at(y).at(x) = true;
             ++minesCreated;
         }
     }
@@ -183,7 +183,7 @@ QGridLayout* field::initCells()
         QVector<cell*> row;
         for (quint16 x = 0; x < m_width; ++x)
         {
-            bool isMine = fld.at(y).at(x) == -1;
+            bool isMine = m_minesField.at(y).at(x);
             cell *newCell = new cell(x, y, isMine ? -1 : countMinesAroundCell(x, y), isMine);
             newCell->setIcon(iqons.value(ICON::def));
             newCell->setFixedSize(SIZE, SIZE);
@@ -220,7 +220,7 @@ quint16 field::countMinesAroundCell(quint16 x, quint16 y)
     {
         for (int row = y - 1; row <= y + 1; ++row)
         {
-            if (row >= 0 && row < m_height && col >= 0 && col < m_width && fld.at(row).at(col) == -1)
+            if (row >= 0 && row < m_height && col >= 0 && col < m_width && m_minesField.at(row).at(col))
             {
                 ++mines_count;
             }
@@ -323,7 +323,7 @@ void field::rightClick()
         break;
     }
 
-    if (m_correctedFlagsPlaced == m_minesCount && m_correctedFlagsPlaced == m_flagsPlaced)
+    if (m_correctedFlagsPlaced == m_minesCount && m_correctedFlagsPlaced == m_flagsPlaced && m_correctedFlagsPlaced > 0)
     {
         win();
     }
@@ -335,7 +335,7 @@ void field::placeFlag(cell* c, const quint16& x, const quint16& y)
     c->setStatus(cell::status::flag);
     ++m_flagsPlaced;
     lcdmines->decrease();
-    if(c->isMine())
+    if(c->isMine())     
         ++m_correctedFlagsPlaced;
     updateNearestFlagCount(x, y, true);
 }
@@ -346,7 +346,7 @@ void field::removeFlag(cell* c, const quint16& x, const quint16& y)
     c->setStatus(cell::status::deflt);
     --m_flagsPlaced;
     lcdmines->increase();
-    if(c->isMine())
+    if(c->isMine()) 
         --m_correctedFlagsPlaced;
     updateNearestFlagCount(x, y, false);
 }
@@ -518,6 +518,9 @@ void field::restartGame()
     resetCells();
     disableLayout(fieldLayout, false);
 
+    m_flagsPlaced = 0;
+    m_correctedFlagsPlaced = 0;
+
     timer->reset();
     timer->start();
 
@@ -536,7 +539,7 @@ void field::resetCells()
 
             c->setStatus(cell::status::deflt);
             c->setIcon(iqons.value(ICON::def));
-            c->setMine(fld.at(y).at(x) == -1);
+            c->setMine(m_minesField.at(y).at(x));
             c->setMinesAround(c->isMine() ? -1 : countMinesAroundCell(x, y));
             c->resetFlagsCount();
         }

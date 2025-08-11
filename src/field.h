@@ -42,7 +42,7 @@ private:
     quint16 m_minesCount;
     quint16 m_flagsPlaced;
     quint16 m_correctedFlagsPlaced;
-    std::vector<std::vector<int>> fld;
+    std::vector<std::vector<bool>> m_minesField;
 
     QVector<QVector<cell*>> cells;
     QMap<ICON, QIcon> iqons;
